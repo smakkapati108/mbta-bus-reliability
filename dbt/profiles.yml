@@ -1,0 +1,9 @@
+transit:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: "{{ env_var('TRANSIT_DB_PATH', '../data/transit.duckdb') }}"
+      threads: 4
+      settings:
+        TimeZone: UTC

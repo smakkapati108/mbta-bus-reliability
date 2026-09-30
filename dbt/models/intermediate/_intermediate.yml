@@ -1,0 +1,22 @@
+version: 2
+
+models:
+  - name: int_ping_progress
+    description: Pings mapped to trip instances and a continuous progress position along the trip.
+    columns:
+      - name: instance_id
+        data_tests: [not_null]
+      - name: service_date
+        data_tests: [not_null]
+
+  - name: int_stop_events
+    description: Interpolated arrival (or origin departure) time for each stop of each observed trip instance.
+    data_tests:
+      - unique_combination:
+          arguments:
+            columns: [instance_id, stop_index]
+    columns:
+      - name: observed_utc
+        data_tests: [not_null]
+      - name: scheduled_utc
+        data_tests: [not_null]

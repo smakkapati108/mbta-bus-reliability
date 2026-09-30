@@ -1,0 +1,39 @@
+version: 2
+
+models:
+  - name: stg_vehicle_pings
+    description: Fresh revenue-service vehicle positions with a trip assignment.
+    columns:
+      - name: vehicle_id
+        data_tests: [not_null]
+      - name: ping_utc
+        data_tests: [not_null]
+      - name: current_status
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['IN_TRANSIT_TO', 'INCOMING_AT', 'STOPPED_AT']
+
+  - name: stg_gtfs_trips
+    columns:
+      - name: trip_id
+        data_tests: [unique, not_null]
+
+  - name: stg_gtfs_stop_times
+    data_tests:
+      - unique_combination:
+          arguments:
+            columns: [trip_id, stop_index]
+    columns:
+      - name: sched_arrival_sec
+        data_tests: [not_null]
+
+  - name: stg_gtfs_stops
+    columns:
+      - name: stop_id
+        data_tests: [unique, not_null]
+
+  - name: stg_gtfs_routes
+    columns:
+      - name: route_id
+        data_tests: [unique, not_null]

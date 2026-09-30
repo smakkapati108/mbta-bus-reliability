@@ -1,0 +1,21 @@
+version: 2
+
+sources:
+  - name: raw
+    description: Vehicle positions written by `python -m transit ingest`.
+    tables:
+      - name: vehicle_pings
+        description: One row per (vehicle, updated_at) position report, de-duplicated at ingest. Timestamps are naive UTC.
+        freshness:
+          warn_after: {count: 15, period: minute}
+          error_after: {count: 2, period: hour}
+        loaded_at_field: polled_at
+
+  - name: gtfs
+    description: Static GTFS schedule, every feed version retained (`python -m transit gtfs`).
+    tables:
+      - name: feeds
+      - name: routes
+      - name: trips
+      - name: stop_times
+      - name: stops

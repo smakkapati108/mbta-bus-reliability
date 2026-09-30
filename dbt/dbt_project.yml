@@ -1,0 +1,32 @@
+name: transit
+version: "1.0.0"
+config-version: 2
+profile: transit
+
+model-paths: ["models"]
+macro-paths: ["macros"]
+test-paths: ["tests"]
+target-path: "target"
+clean-targets: ["target", "dbt_packages"]
+
+vars:
+  local_tz: "America/New_York"
+  # MBTA's bus on-time standard at timepoints: no more than 1 min early, no more than 6 min late.
+  early_threshold_sec: -60
+  late_threshold_sec: 360
+  # Pings older than this when polled are treated as stale (the vehicle stopped reporting).
+  max_ping_staleness_sec: 600
+  # A gap this long between two pings of the same trip is too wide to interpolate across.
+  max_interp_gap_sec: 600
+
+models:
+  transit:
+    staging:
+      +schema: staging
+      +materialized: view
+    intermediate:
+      +schema: intermediate
+      +materialized: table
+    marts:
+      +schema: marts
+      +materialized: table

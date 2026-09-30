@@ -1,0 +1,15 @@
+# /etc/systemd/system/transit-collector.service  ->  systemctl enable --now transit-collector
+[Unit]
+Description=MBTA vehicle position collector
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+WorkingDirectory=/opt/mbta
+Environment=MBTA_API_KEY=
+ExecStart=/opt/mbta/.venv/bin/python -m transit collect
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

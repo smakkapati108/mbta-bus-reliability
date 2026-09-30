@@ -1,0 +1,40 @@
+version: 2
+
+models:
+  - name: fct_stop_events
+    description: >
+      Every observed stop visit with schedule adherence. On-time follows the MBTA bus
+      standard at timepoints: between 1 minute early and 6 minutes late.
+    columns:
+      - name: instance_id
+        data_tests: [not_null]
+      - name: route_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_routes')
+                field: route_id
+      - name: delay_sec
+        data_tests: [not_null]
+      - name: day_type
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['Weekday', 'Saturday', 'Sunday']
+
+  - name: fct_trip_runtimes
+    columns:
+      - name: instance_id
+        data_tests: [unique, not_null]
+
+  - name: fct_headways
+  - name: agg_route_hourly
+  - name: agg_route_summary
+    columns:
+      - name: route_id
+        data_tests: [unique, not_null]
+  - name: dim_routes
+    columns:
+      - name: route_id
+        data_tests: [unique, not_null]
